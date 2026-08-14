@@ -23375,7 +23375,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		num: 831,
 		name: "Lamball",
 		types: ["Normal"],
-		baseStats: {hp: 66, atk: 90, def: 100, spa: 50, spd: 85, spe: 99},
+		baseStats: {hp: 66, atk: 90, def: 100, spa: 50, spd: 77, spe: 99},
 		abilities: {0: "Fluffy", 1: "Rattled", H: "Bulletproof"},
 		heightm: 0.6,
 		weightkg: 6,
