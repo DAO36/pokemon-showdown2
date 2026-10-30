@@ -585,14 +585,16 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 				}
 			}
 		},
-		onEmergencyExit(target) {
+		onEmergencyExit(originalHp, target) {
+			if (!target.hp || target.hp > target.maxhp / 2 || originalHp <= target.maxhp / 2) return;
 			if (!this.canSwitch(target.side) || target.forceSwitchFlag || target.switchFlag) return;
 			for (const side of this.sides) {
 				for (const active of side.active) {
 					active.switchFlag = false;
 				}
 			}
-			target.switchFlag = true; 
+			target.switchFlag = true;
+			this.add('-activate', target, 'ability: GTFO');
 		},
 		flags: {},
 		name: "GTFO",
@@ -903,6 +905,7 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		onAfterMove(target, source, move) {
             if (move.category === 'Status') {
                 this.heal(target.baseMaxhp / 10);
+				this.add('-activate', target, 'ability: Spider Soup');
             }
         },
 		flags: {breakable: 1},
