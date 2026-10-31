@@ -43,7 +43,7 @@ export class Field {
 		if (source === 'debug') source = this.battle.sides[0].active[0];
 
 		if (this.weather === status.id) {
-			if (sourceEffect?.effectType === 'Ability') {
+			if (sourceEffect && sourceEffect.effectType === 'Ability') {
 				if (this.battle.gen > 5 || this.weatherState.duration === 0) {
 					return false;
 				}
@@ -57,7 +57,7 @@ export class Field {
 				if (result === false) {
 					if ((sourceEffect as Move)?.weather) {
 						this.battle.add('-fail', source, sourceEffect, '[from] ' + this.weather);
-					} else if (sourceEffect?.effectType === 'Ability') {
+					} else if (sourceEffect && sourceEffect.effectType === 'Ability') {
 						this.battle.add('-ability', source, sourceEffect, '[from] ' + this.weather, '[fail]');
 					}
 				}

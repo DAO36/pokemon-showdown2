@@ -303,7 +303,7 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 			}
 			// gets attack of foe this turn
 			const action = this.queue.willMove(foe);
-			if (action?.choice !== 'move') {
+			if (!action || action.choice !== 'move') {
 				return priority;
 			}
 			const move = action.move;
@@ -320,7 +320,7 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 				return basePower;
 			}
 			const action = this.queue.willMove(foe);
-			if (action?.choice !== 'move') {
+			if (!action || action.choice !== 'move') {
 				return basePower;
 			}
 			const move = action.move;
@@ -905,7 +905,7 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 				// target.baseAbility = target.ability;
 				const newMoves = ['flipturn', 'voltswitch', 'sizzlyslide', 'facade'];
 				// Update move slots
-				// oxlint-disable-next-line no-shadow
+				// eslint-disable-next-line @typescript-eslint/no-shadow
 				source.moveSlots = newMoves.map(move => {
 					const moveData = this.dex.moves.get(move);
 					return {
@@ -943,7 +943,7 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 				// target.baseAbility = target.ability;
 				const newMoves = ['flipturn', 'burnout', 'zippyzap', 'freezyfrost'];
 				// Update move slots
-				// oxlint-disable-next-line no-shadow
+				// eslint-disable-next-line @typescript-eslint/no-shadow
 				source.moveSlots = newMoves.map(move => {
 					const moveData = this.dex.moves.get(move);
 					return {
@@ -974,7 +974,7 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 				// target.baseAbility = target.ability;
 				const newMoves = ['voltswitch', 'burnout', 'recover', 'scald'];
 				// Update move slots
-				// oxlint-disable-next-line no-shadow
+				// eslint-disable-next-line @typescript-eslint/no-shadow
 				source.moveSlots = newMoves.map(move => {
 					const moveData = this.dex.moves.get(move);
 					return {
@@ -1237,7 +1237,7 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		},
 		self: {
 			onHit(source) {
-				source.skipPursuit = true;
+				source.skipBeforeSwitchOutEventFlag = true;
 			},
 		},
 		selfSwitch: true,

@@ -8,9 +8,7 @@
 import * as https from 'https';
 import * as http from 'http';
 import * as Streams from './streams';
-
-// Net is also used without the server's global declarations.
-declare const global: { Config?: { noNetRequests?: boolean } };
+declare const Config: any;
 
 export interface PostData {
 	[key: string]: string | number;
@@ -19,7 +17,6 @@ export interface NetRequestOptions extends https.RequestOptions {
 	body?: string | PostData;
 	writable?: boolean;
 	query?: PostData;
-	headers?: http.OutgoingHttpHeaders & NodeJS.Dict<unknown>; // Node 22 lets headers be readonly string[]
 }
 
 export class HttpError extends Error {
@@ -191,7 +188,7 @@ export class NetRequest {
 	 * @param body POST body
 	 */
 	getStream(opts: NetRequestOptions = {}) {
-		if (global.Config?.noNetRequests) {
+		if (typeof Config !== 'undefined' && Config.noNetRequests) {
 			throw new Error(`Net requests are disabled.`);
 		}
 		const stream = new NetStream(this.uri, opts);

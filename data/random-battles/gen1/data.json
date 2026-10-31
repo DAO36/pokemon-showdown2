@@ -53,7 +53,7 @@
         "exclusiveMoves": ["doubleedge", "hyperbeam", "megadrain", "substitute"]
     },
     "beedrill": {
-        "level": 84,
+        "level": 81,
         "moves": ["hyperbeam", "swordsdance", "twineedle"],
         "exclusiveMoves": ["agility", "agility", "megadrain"]
     },
@@ -539,7 +539,7 @@
     "kangaskhan": {
         "level": 73,
         "moves": ["bodyslam", "earthquake", "hyperbeam"],
-        "exclusiveMoves": ["blizzard", "counter", "rockslide", "rockslide"]
+        "exclusiveMoves": ["blizzard", "counter", "rockslide", "rockslide", "surf"]
     },
     "horsea": {
         "level": 88,
@@ -653,8 +653,8 @@
     },
     "omastar": {
         "level": 74,
-        "moves": ["rest", "rest", "seismictoss"],
-        "essentialMoves": ["blizzard", "bodyslam"],
+        "moves": ["bodyslam", "rest", "seismictoss"],
+        "essentialMoves": ["blizzard"],
         "exclusiveMoves": ["hydropump", "surf"]
     },
     "kabuto": {

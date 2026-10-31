@@ -64,8 +64,6 @@ export const Items: import('../../../sim/dex-items').ModdedItemDataTable = {
 				const species: Species = this.actions.getMixedSpecies(pokemon.m.originalSpecies, 'Kyogre-Primal', pokemon);
 				if (pokemon.m.originalSpecies === 'Kyogre') {
 					pokemon.formeChange(species, this.effect, true);
-					this.add(pokemon);
-					this.add('-start', pokemon, 'Blue Orb', '[silent]');
 				} else {
 					pokemon.formeChange(species, this.effect, true);
 					pokemon.baseSpecies = species;
@@ -217,9 +215,6 @@ export const Items: import('../../../sim/dex-items').ModdedItemDataTable = {
 				const species: Species = this.actions.getMixedSpecies(pokemon.m.originalSpecies, 'Groudon-Primal', pokemon);
 				if (pokemon.m.originalSpecies === 'Groudon') {
 					pokemon.formeChange(species, this.effect, true);
-					this.add(pokemon);
-					this.add('-start', pokemon, 'Red Orb', '[silent]');
-					this.add('-start', pokemon, 'typechange', species.types.join('/'), '[silent]');
 				} else {
 					pokemon.formeChange(species, this.effect, true);
 					pokemon.baseSpecies = species;

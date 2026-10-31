@@ -260,11 +260,6 @@ export class BattleQueue {
 			let target = null;
 			action.move = this.battle.dex.getActiveMove(action.move);
 
-			if (this.battle.dex.currentMod.startsWith('champions') &&
-				action.move.id === 'curse' && !action.pokemon.hasType('Ghost')) {
-				action.move.target = 'self';
-			}
-
 			if (!action.targetLoc) {
 				target = this.battle.getRandomTarget(action.pokemon, action.move);
 				// TODO: what actually happens here?
@@ -334,7 +329,7 @@ export class BattleQueue {
 	cancelAction(pokemon: Pokemon) {
 		const oldLength = this.list.length;
 		for (let i = 0; i < this.list.length; i++) {
-			if (this.list[i].pokemon === pokemon && this.list[i].choice !== 'runSwitch') {
+			if (this.list[i].pokemon === pokemon) {
 				this.list.splice(i, 1);
 				i--;
 			}
@@ -359,12 +354,6 @@ export class BattleQueue {
 			}
 		}
 		return null;
-	}
-
-	getSwitches(side?: Side) {
-		return this.list.filter(
-			action => ['switch', 'instaswitch'].includes(action.choice) && (!side || (action as SwitchAction).pokemon.side === side)
-		) as SwitchAction[];
 	}
 
 	/**

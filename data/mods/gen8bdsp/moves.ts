@@ -253,135 +253,135 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 	},
 	gmaxbefuddle: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxcannonade: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxcentiferno: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxchistrike: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxcuddle: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxdepletion: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxdrumsolo: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxfinale: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxfireball: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxfoamburst: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxgoldrush: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxgravitas: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxhydrosnipe: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxmalodor: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxmeltdown: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxoneblow: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxrapidflow: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxreplenish: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxresonance: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxsandblast: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxsmite: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxsnooze: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxsteelsurge: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxstonesurge: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxstunshock: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxsweetness: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxtartness: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxterror: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxvinelash: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxvolcalith: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxvoltcrash: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxwildfire: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	gmaxwindrage: {
 		inherit: true,
-		isNonstandard: "Gmax",
+		isNonstandard: "Past",
 	},
 	grasspledge: {
 		inherit: true,
@@ -617,6 +617,8 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 	},
 	metronome: {
 		inherit: true,
+		desc: "A random move is selected for use, other than After You, Belch, Body Press, Chatter, Copycat, Counter, Covet, Destiny Bond, Detect, Dragon Ascent, Endure, Feint, Focus Punch, Follow Me, Helping Hand, Life Dew, Metronome, Mimic, Mirror Coat, Nature Power, Origin Pulse, Precipice Blades, Protect, Quash, Quick Guard, Rage Powder, Sketch, Sleep Talk, Snarl, Snore, Spiky Shield, Struggle, Switcheroo, Thief, Transform, Trick, or Wide Guard.",
+		shortDesc: "Picks a random move.",
 	},
 	mindblown: {
 		inherit: true,

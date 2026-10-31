@@ -270,7 +270,7 @@ export class ReadStream {
 	}
 
 	byChunk(byteCount?: number | null) {
-		// oxlint-disable-next-line typescript/no-this-alias
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const byteStream = this;
 		return new ObjectReadStream<string>({
 			async read(this: ObjectReadStream<string>) {
@@ -282,7 +282,7 @@ export class ReadStream {
 	}
 
 	byLine() {
-		// oxlint-disable-next-line typescript/no-this-alias
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const byteStream = this;
 		return new ObjectReadStream<string>({
 			async read(this: ObjectReadStream<string>) {
@@ -294,7 +294,7 @@ export class ReadStream {
 	}
 
 	delimitedBy(delimiter: string) {
-		// oxlint-disable-next-line typescript/no-this-alias
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const byteStream = this;
 		return new ObjectReadStream<string>({
 			async read(this: ObjectReadStream<string>) {

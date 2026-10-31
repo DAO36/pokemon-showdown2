@@ -1,10 +1,7 @@
 export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTable = {
 	airlock: {
 		inherit: true,
-		onSwitchInPriority: 13,
-		onSwitchIn(pokemon) {
-			pokemon.abilityState.ending = false;
-		},
+		onSwitchIn: undefined, // no inherit
 		onStart(pokemon) {
 			pokemon.abilityState.ending = false;
 		},
@@ -13,16 +10,12 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 		inherit: true,
 		onAfterSubDamage(damage, target, source, move) {
 			if (!target.hp) return;
-			if (move?.effectType === 'Move' && target.getMoveHitData(move).crit) {
+			if (move && move.effectType === 'Move' && target.getMoveHitData(move).crit) {
 				target.setBoost({ atk: 6 });
 				this.add('-setboost', target, 'atk', 12, '[from] ability: Anger Point');
 			}
 		},
 		rating: 1.5,
-	},
-	anticipation: {
-		inherit: true,
-		onSwitchInPriority: 8,
 	},
 	baddreams: {
 		inherit: true,
@@ -43,10 +36,7 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	},
 	cloudnine: {
 		inherit: true,
-		onSwitchInPriority: 13,
-		onSwitchIn(pokemon) {
-			pokemon.abilityState.ending = false;
-		},
+		onSwitchIn: undefined, // no inherit
 		onStart(pokemon) {
 			pokemon.abilityState.ending = false;
 		},
@@ -84,7 +74,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	},
 	download: {
 		inherit: true,
-		onSwitchInPriority: 9,
 		onStart(pokemon) {
 			let totaldef = 0;
 			let totalspd = 0;
@@ -99,14 +88,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 				this.boost({ atk: 1 });
 			}
 		},
-	},
-	drizzle: {
-		inherit: true,
-		onSwitchInPriority: 11,
-	},
-	drought: {
-		inherit: true,
-		onSwitchInPriority: 11,
 	},
 	effectspore: {
 		inherit: true,
@@ -154,7 +135,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	},
 	flowergift: {
 		inherit: true,
-		onSwitchInPriority: 2,
 		onAllyModifyAtk(atk) {
 			if (this.field.isWeather('sunnyday')) {
 				return this.chainModify(1.5);
@@ -169,12 +149,10 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	},
 	forecast: {
 		inherit: true,
-		onSwitchInPriority: 2,
 		flags: { notrace: 1 },
 	},
 	forewarn: {
 		inherit: true,
-		onSwitchInPriority: 7,
 		onStart(pokemon) {
 			let warnMoves: Move[] = [];
 			let warnBp = 1;
@@ -200,7 +178,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	},
 	frisk: {
 		inherit: true,
-		onSwitchInPriority: 6,
 		onStart(pokemon) {
 			const target = pokemon.side.randomFoe();
 			if (target?.item) {
@@ -233,7 +210,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	},
 	intimidate: {
 		inherit: true,
-		onSwitchInPriority: 10,
 		onStart(pokemon) {
 			const activated = pokemon.adjacentFoes().some(target => (
 				!(target.volatiles['substitute'] || target.volatiles['substitutebroken']?.move === 'uturn')
@@ -259,7 +235,7 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	leafguard: {
 		inherit: true,
 		onSetStatus(status, target, source, effect) {
-			if (effect?.id === 'rest') {
+			if (effect && effect.id === 'rest') {
 				// do nothing
 			} else if (this.field.isWeather('sunnyday')) {
 				return false;
@@ -285,7 +261,7 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	magicguard: {
 		inherit: true,
 		onSetStatus(status, target, source, effect) {
-			if (effect?.id === 'toxicspikes') {
+			if (effect && effect.id === 'toxicspikes') {
 				return false;
 			}
 		},
@@ -301,10 +277,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 				}
 			}
 		},
-	},
-	moldbreaker: {
-		inherit: true,
-		onSwitchInPriority: 4,
 	},
 	multitype: {
 		inherit: true,
@@ -373,7 +345,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	},
 	pressure: {
 		inherit: true,
-		onSwitchInPriority: 3,
 		onDeductPP(target, source) {
 			if (target === source) return;
 			return 1;
@@ -387,10 +358,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 				this.damage(source.baseMaxhp / 8, source, target);
 			}
 		},
-	},
-	sandstream: {
-		inherit: true,
-		onSwitchInPriority: 11,
 	},
 	sandveil: {
 		inherit: true,
@@ -429,10 +396,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 			}
 		},
 	},
-	slowstart: {
-		inherit: true,
-		onSwitchInPriority: 5,
-	},
 	snowcloak: {
 		inherit: true,
 		onModifyAccuracyPriority: 8,
@@ -443,10 +406,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 				return this.chainModify(0.8);
 			}
 		},
-	},
-	snowwarning: {
-		inherit: true,
-		onSwitchInPriority: 11,
 	},
 	speedboost: {
 		inherit: true,
@@ -479,7 +438,7 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	stickyhold: {
 		inherit: true,
 		onTakeItem(item, pokemon, source) {
-			if ((source && source !== pokemon) || (this.activeMove?.id === 'knockoff')) {
+			if ((source && source !== pokemon) || (this.activeMove && this.activeMove.id === 'knockoff')) {
 				this.add('-activate', pokemon, 'ability: Sticky Hold');
 				return false;
 			}
@@ -511,7 +470,7 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 		inherit: true,
 		onAfterSetStatus(status, target, source, effect) {
 			if (!source || source === target) return;
-			if (effect?.id === 'toxicspikes') return;
+			if (effect && effect.id === 'toxicspikes') return;
 			let id: string = status.id;
 			if (id === 'slp' || id === 'frz') return;
 			if (id === 'tox') id = 'psn';
@@ -554,7 +513,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	},
 	trace: {
 		inherit: true,
-		onSwitchInPriority: 12,
 		onUpdate(pokemon) {
 			if (!this.effectState.seek) return;
 			const target = pokemon.side.randomFoe();
@@ -564,20 +522,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 			pokemon.setAbility(ability, target);
 		},
 		flags: { notrace: 1 },
-	},
-	truant: {
-		inherit: true,
-		onBeforeMove(pokemon) {
-			if (pokemon.volatiles['truant']) {
-				this.add('cant', pokemon, 'ability: Truant');
-				return false;
-			}
-		},
-		onResidual(pokemon) {
-			if (!pokemon.removeVolatile('truant') && pokemon.activeTurns) {
-				pokemon.addVolatile('truant');
-			}
-		},
 	},
 	vitalspirit: {
 		inherit: true,

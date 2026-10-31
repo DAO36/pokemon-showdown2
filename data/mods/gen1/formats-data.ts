@@ -378,7 +378,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 		tier: "PU",
 	},
 	pinsir: {
-		tier: "ZUBL",
+		tier: "ZU",
 	},
 	tauros: {
 		tier: "OU",

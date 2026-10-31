@@ -109,7 +109,7 @@ export const Scripts: ModdedBattleScriptsData = {
 				this.singleEvent(handlerEventid, effect, handler.state, handler.effectHolder, null, null, undefined, handler.callback);
 			}
 
-			this.resolveFaints();
+			this.faintMessages();
 			if (this.ended) return;
 		}
 	},
@@ -138,7 +138,7 @@ export const Scripts: ModdedBattleScriptsData = {
 
 		const dynamaxEnding: Pokemon[] = [];
 		for (const pokemon of this.getAllActive()) {
-			if (pokemon.volatiles['dynamax']?.turns <= 0) {
+			if (pokemon.volatiles['dynamax']?.turns === 3) {
 				dynamaxEnding.push(pokemon);
 			}
 		}

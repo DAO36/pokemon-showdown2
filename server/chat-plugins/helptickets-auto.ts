@@ -515,7 +515,7 @@ export async function runPunishments(ticket: TicketState & { text: [string, stri
 				closeTicket(ticket); // no good response. just close it, because we __have__ dispatched an action.
 			}
 		} else {
-			// oxlint-disable-next-line ps/require-atomic-updates
+			// eslint-disable-next-line require-atomic-updates
 			ticket.recommended = [];
 			for (const res of result.values()) {
 				Rooms.get('abuselog')?.add(

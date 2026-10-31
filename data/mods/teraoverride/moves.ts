@@ -57,7 +57,7 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 		inherit: true,
 		onModifyMove(move, source, target) {
 			if (!source.hasType(source.teraType)) {
-				move.target = 'self';
+				move.target = move.nonGhostTarget!;
 			} else if (source.isAlly(target)) {
 				move.target = 'randomNormal';
 			}
@@ -252,7 +252,7 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 	freezedry: {
 		inherit: true,
 		onEffectiveness(typeMod, target, type) {
-			if (type === target?.side.foe.active[0].teraType) return 1;
+			if (target && type === target.side.foe.active[0].teraType) return 1;
 		},
 	},
 	gmaxcannonade: {
@@ -766,7 +766,7 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 			if (target.side.active.length === 2 && target.position === 1) {
 				// Curse Glitch
 				const action = this.queue.willMove(target);
-				if (action?.move.id === 'curse') {
+				if (action && action.move.id === 'curse') {
 					action.targetLoc = -1;
 				}
 			}

@@ -140,10 +140,15 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 	},
 	mindblown: {
 		inherit: true,
-		onMoveFail(target, source, move) {
-			if (move.multihit) return;
-			const calc = calculate(this, source, source, 'mindblown');
-			this.damage(Math.round(calc * source.maxhp / 2), source, source, this.dex.conditions.get('Mind Blown'));
+		onAfterMove(pokemon, target, move) {
+			if (move.mindBlownRecoil && !move.multihit) {
+				const hpBeforeRecoil = pokemon.hp;
+				const calc = calculate(this, pokemon, pokemon, 'mindblown');
+				this.damage(Math.round(calc * pokemon.maxhp / 2), pokemon, pokemon, this.dex.conditions.get('Mind Blown'), true);
+				if (pokemon.hp <= pokemon.maxhp / 2 && hpBeforeRecoil > pokemon.maxhp / 2) {
+					this.runEvent('EmergencyExit', pokemon, pokemon);
+				}
+			}
 		},
 	},
 	nightmare: {
@@ -239,10 +244,15 @@ export const Moves: import('../../../sim/dex-moves').ModdedMoveDataTable = {
 	},
 	steelbeam: {
 		inherit: true,
-		onMoveFail(target, source, move) {
-			if (move.multihit) return;
-			const calc = calculate(this, source, source, 'steelbeam');
-			this.damage(Math.round(calc * source.maxhp / 2), source, source, this.dex.conditions.get('Mind Blown'));
+		onAfterMove(pokemon, target, move) {
+			if (move.mindBlownRecoil && !move.multihit) {
+				const hpBeforeRecoil = pokemon.hp;
+				const calc = calculate(this, pokemon, pokemon, 'steelbeam');
+				this.damage(Math.round(calc * pokemon.maxhp / 2), pokemon, pokemon, this.dex.conditions.get('Steel Beam'), true);
+				if (pokemon.hp <= pokemon.maxhp / 2 && hpBeforeRecoil > pokemon.maxhp / 2) {
+					this.runEvent('EmergencyExit', pokemon, pokemon);
+				}
+			}
 		},
 	},
 	supercellslam: {

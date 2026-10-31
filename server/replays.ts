@@ -144,7 +144,7 @@ export const Replays = new class {
 	generatePassword(length = 31) {
 		let password = '';
 		for (let i = 0; i < length; i++) {
-			password += this.passwordCharacters[crypto.randomInt(0, this.passwordCharacters.length)];
+			password += this.passwordCharacters[crypto.randomInt(0, this.passwordCharacters.length - 1)];
 		}
 
 		return password;

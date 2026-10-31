@@ -1398,7 +1398,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 		isNonstandard: null,
 	},
 	garchompmegaz: {
-		isNonstandard: null,
+		isNonstandard: "Unobtainable",
 	},
 	munchlax: {
 		isNonstandard: "Past",
@@ -2075,7 +2075,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 		isNonstandard: null,
 	},
 	greninjabond: {
-		isNonstandard: "Past",
+		isNonstandard: "Unobtainable",
 	},
 	greninjamega: {
 		isNonstandard: null,
@@ -2569,7 +2569,7 @@ export const FormatsData: import('../../../sim/dex-species').ModdedSpeciesFormat
 		isNonstandard: null,
 	},
 	magearnaoriginal: {
-		isNonstandard: null,
+		isNonstandard: "Unobtainable",
 	},
 	magearnamega: {
 		isNonstandard: null,

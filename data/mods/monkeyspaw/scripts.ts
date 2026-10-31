@@ -5,7 +5,7 @@ export const Scripts: ModdedBattleScriptsData = {
 
 		const dynamaxEnding: Pokemon[] = [];
 		for (const pokemon of this.getAllActive()) {
-			if (pokemon.volatiles['dynamax']?.turns <= 0) {
+			if (pokemon.volatiles['dynamax']?.turns === 3) {
 				dynamaxEnding.push(pokemon);
 			}
 		}
@@ -281,7 +281,20 @@ export const Scripts: ModdedBattleScriptsData = {
 			if (action.choice === 'switch' && action.pokemon.status) {
 				this.singleEvent('CheckShow', this.dex.abilities.getByID('naturalcure' as ID), null, action.pokemon);
 			}
-			this.actions.switchIn(action.target, action.pokemon.position, action.sourceEffect);
+			if (this.actions.switchIn(action.target, action.pokemon.position, action.sourceEffect) === 'pursuitfaint') {
+				// a pokemon fainted from Pursuit before it could switch
+				if (this.gen <= 4) {
+					// in gen 2-4, the switch still happens
+					this.hint("Previously chosen switches continue in Gen 2-4 after a Pursuit target faints.");
+					action.priority = -101;
+					this.queue.unshift(action);
+					break;
+				} else {
+					// in gen 5+, the switch is cancelled
+					this.hint("A Pokemon can't switch between when it runs out of HP and when it faints");
+					break;
+				}
+			}
 			break;
 		case 'revivalblessing':
 			action.pokemon.side.pokemonLeft++;
@@ -318,7 +331,7 @@ export const Scripts: ModdedBattleScriptsData = {
 			this.add('');
 			this.clearActiveMove(true);
 			this.updateSpeed();
-			residualPokemon = this.getAllActive().map(pokemon => [pokemon, pokemon.hp] as const);
+			residualPokemon = this.getAllActive().map(pokemon => [pokemon, pokemon.getUndynamaxedHP()] as const);
 			this.fieldEvent('Residual');
 			if (!this.ended) this.add('upkeep');
 			break;
@@ -338,7 +351,7 @@ export const Scripts: ModdedBattleScriptsData = {
 
 		// fainting
 
-		this.resolveFaints();
+		this.faintMessages();
 		if (this.ended) return true;
 
 		// switching (fainted pokemon, U-turn, Baton Pass, etc)
@@ -366,12 +379,18 @@ export const Scripts: ModdedBattleScriptsData = {
 		if (this.gen >= 5 && action.choice !== 'start') {
 			this.eachEvent('Update');
 			for (const [pokemon, originalHP] of residualPokemon) {
-				this.runEvent('EmergencyExit', pokemon, undefined, undefined, originalHP);
+				const maxhp = pokemon.getUndynamaxedHP(pokemon.maxhp);
+				if (pokemon.hp && pokemon.getUndynamaxedHP() <= maxhp / 2 && originalHP > maxhp / 2) {
+					this.runEvent('EmergencyExit', pokemon);
+				}
 			}
 		}
 
 		if (action.choice === 'runSwitch') {
-			this.runEvent('EmergencyExit', action.pokemon, undefined, undefined, pokemonOriginalHP!);
+			const pokemon = action.pokemon;
+			if (pokemon.hp && pokemon.hp <= pokemon.maxhp / 2 && pokemonOriginalHP! > pokemon.maxhp / 2) {
+				this.runEvent('EmergencyExit', pokemon);
+			}
 		}
 
 		const switches = this.sides.map(
@@ -393,11 +412,11 @@ export const Scripts: ModdedBattleScriptsData = {
 				for (const pokemon of this.sides[i].active) {
 					if (
 						pokemon.hp && pokemon.switchFlag && pokemon.switchFlag !== 'revivalblessing' &&
-						!pokemon.skipPursuit
+						!pokemon.skipBeforeSwitchOutEventFlag
 					) {
 						this.runEvent('BeforeSwitchOut', pokemon);
-						pokemon.skipPursuit = true;
-						this.resolveFaints(); // Pokemon may have fainted in BeforeSwitchOut
+						pokemon.skipBeforeSwitchOutEventFlag = true;
+						this.faintMessages(); // Pokemon may have fainted in BeforeSwitchOut
 						if (this.ended) return true;
 						if (pokemon.fainted) {
 							switches[i] = this.sides[i].active.some(sidePokemon => sidePokemon && !!sidePokemon.switchFlag);

@@ -41,7 +41,7 @@ export const Items: import('../../../sim/dex-items').ModdedItemDataTable = {
 	earthplate: {
 		inherit: true,
 		onBasePower(basePower, user, target, move) {
-			if (move?.type === 'Fighting') {
+			if (move && move.type === 'Fighting') {
 				return this.chainModify([4915, 4096]);
 			}
 		},
@@ -101,7 +101,7 @@ export const Items: import('../../../sim/dex-items').ModdedItemDataTable = {
 	hardstone: {
 		inherit: true,
 		onBasePower(basePower, user, target, move) {
-			if (move?.type === 'Fighting') {
+			if (move && move.type === 'Fighting') {
 				return this.chainModify([4915, 4096]);
 			}
 		},
@@ -180,7 +180,7 @@ export const Items: import('../../../sim/dex-items').ModdedItemDataTable = {
 	pixieplate: {
 		inherit: true,
 		onBasePower(basePower, user, target, move) {
-			if (move?.type === 'Psychic') {
+			if (move && move.type === 'Psychic') {
 				return this.chainModify([4915, 4096]);
 			}
 		},
@@ -237,7 +237,7 @@ export const Items: import('../../../sim/dex-items').ModdedItemDataTable = {
 	sharpbeak: {
 		inherit: true,
 		onBasePower(basePower, user, target, move) {
-			if (move?.type === 'Normal') {
+			if (move && move.type === 'Normal') {
 				return this.chainModify([4915, 4096]);
 			}
 		},

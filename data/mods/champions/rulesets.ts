@@ -13,13 +13,6 @@ export const Rulesets: import('../../../sim/dex-formats').ModdedFormatDataTable 
 			'Sleep Moves Clause', 'Nickname Clause', 'OHKO Clause', 'Evasion Clause',
 		],
 	},
-	standarddoubles: {
-		inherit: true,
-		ruleset: [
-			'Standard AG',
-			'Nickname Clause', 'OHKO Clause', 'Evasion Moves Clause', 'Gravity Sleep Clause',
-		],
-	},
 	standarddraft: {
 		inherit: true,
 		ruleset: [
@@ -67,14 +60,5 @@ export const Rulesets: import('../../../sim/dex-formats').ModdedFormatDataTable 
 			this.add('rule', "Level Clause Mod: Pokémon levels are not fixed at 50, with stats calculated accordingly.");
 		},
 		// Implemented in mods/champions/scripts.ts
-	},
-	natdexmod: {
-		effectType: 'ValidatorRule',
-		name: 'NatDex Mod',
-		desc: "Mechanics for National Dex formats",
-		ruleset: [
-			'+Unobtainable', '+Past', 'Sketch Post-Gen 7 Moves',
-		],
-		// implemented in the champions natdex draft format
 	},
 };

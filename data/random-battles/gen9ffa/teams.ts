@@ -909,8 +909,8 @@ export class RandomFFATeams extends RandomTeams {
 		const type = this.forceMonotype || this.sample(typePool);
 
 		// PotD stuff
-		const potdName = (ruleTable.has('potd') && global.Config?.potd) || null;
-		const potd = potdName ? this.dex.species.get(potdName) : null;
+		const usePotD = global.Config && Config.potd && ruleTable.has('potd');
+		const potd = usePotD ? this.dex.species.get(Config.potd) : null;
 
 		const baseFormes: { [k: string]: number } = {};
 
@@ -925,7 +925,6 @@ export class RandomFFATeams extends RandomTeams {
 		const [pokemonPool, baseSpeciesPool] = this.getPokemonPool(type, pokemon, isMonotype, pokemonList);
 
 		let leadsRemaining = 1;
-		if (ruleTable.has('pickedteamsize') || ruleTable.has('teampreview')) leadsRemaining = 0;
 		while (baseSpeciesPool.length && pokemon.length < this.maxTeamSize) {
 			const baseSpecies = this.sampleNoReplace(baseSpeciesPool);
 			let species = this.dex.species.get(this.sample(pokemonPool[baseSpecies]));

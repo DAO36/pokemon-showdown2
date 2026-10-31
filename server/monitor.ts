@@ -62,7 +62,6 @@ export const Monitor = new class {
 	battlePreps = new TimedCounter();
 	groupChats = new TimedCounter();
 	tickets = new TimedCounter();
-	deprecationsWarned = new Set();
 
 	activeIp: string | null = null;
 	networkUse: { [k: string]: number } = {};
@@ -71,7 +70,6 @@ export const Monitor = new class {
 
 	TimedCounter = TimedCounter;
 
-	rebuildLock = false;
 	updateServerLock = false;
 	cleanInterval: NodeJS.Timeout | null = null;
 	/**
@@ -84,13 +82,12 @@ export const Monitor = new class {
 	 *********************************************************/
 	crashlog(err: any, source = 'The main process', details: AnyObject | null = null) {
 		const error = (err || {}) as Error;
-		const stack = error.stack || '';
-		const header = /^(\[\d+\] )?@!!@([^\n]*)\n/.exec(stack);
-		if (header) {
-			const [fullHeader, pidPrefix = '', metadata] = header;
+		if ((error.stack || '').startsWith('@!!@')) {
 			try {
-				[error.name, error.message, source, details] = JSON.parse(metadata);
-				error.stack = pidPrefix + stack.slice(fullHeader.length);
+				const stack = (error.stack || '');
+				const nlIndex = stack.indexOf('\n');
+				[error.name, error.message, source, details] = JSON.parse(stack.slice(4, nlIndex));
+				error.stack = stack.slice(nlIndex + 1);
 			} catch {}
 		}
 		const crashType = crashlogger(error, source, details);
@@ -161,12 +158,6 @@ export const Monitor = new class {
 		case 'error':
 			return this.error(text);
 		}
-	}
-
-	warnDeprecated(text: string, details = '') {
-		if (this.deprecationsWarned.has(text)) return;
-		this.deprecationsWarned.add(text);
-		return this.warn(`${text}${details}`);
 	}
 
 	slow(text: string) {

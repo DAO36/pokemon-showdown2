@@ -83,9 +83,9 @@ if (!PM.isParentProcess) {
 	global.Monitor = {
 		crashlog(error: Error, source = 'A team validator process', details: AnyObject | null = null) {
 			const repr = JSON.stringify([error.name, error.message, source, details]);
-			process.send!(`THROW\n@!!@${repr}\n${error.stack ?? error}`);
+			process.send!(`THROW\n@!!@${repr}\n${error.stack}`);
 		},
-	} as typeof Monitor;
+	};
 
 	if (Config.crashguard) {
 		process.on('uncaughtException', (err: Error) => {
@@ -99,11 +99,9 @@ if (!PM.isParentProcess) {
 	global.Dex = require('../sim/dex').Dex.includeData();
 	global.Teams = require('../sim/teams').Teams;
 
-	// oxlint-disable-next-line no-eval
+	// eslint-disable-next-line no-eval
 	PM.startRepl((cmd: string) => eval(cmd));
 }
-
-export { TeamValidator };
 
 export function start(processCount: ConfigLoader.SubProcessesConfig) {
 	PM.spawn(processCount['validator'] ?? 1);

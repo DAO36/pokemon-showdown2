@@ -575,8 +575,8 @@ export class RandomAFDTeams extends RandomTeams {
 		const pokemon: RandomTeamsTypes.RandomSet[] = [];
 
 		// PotD stuff
-		const potdName = (ruleTable.has('potd') && global.Config?.potd) || null;
-		const potd = potdName ? this.dex.species.get(potdName) : null;
+		const usePotD = global.Config && Config.potd && ruleTable.has('potd');
+		const potd = usePotD ? this.dex.species.get(Config.potd) : null;
 
 		const baseFormes: { [k: string]: number } = {};
 

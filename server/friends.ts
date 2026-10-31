@@ -2,7 +2,7 @@
  * Friends chat-plugin database handler.
  * @author mia-pi-git
  */
-// oxlint-disable-next-line typescript/ban-ts-comment
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore in case it isn't installed
 import type * as Database from 'better-sqlite3';
 import { Utils, FS, ProcessManager } from '../lib';
@@ -51,13 +51,13 @@ export class FailureMessage extends Error {
 	}
 }
 
-export function sendPM(message: string, to: string, from: string) {
+export function sendPM(message: string, to: string, from = '~') {
 	const senderID = toID(from);
 	const receiverID = toID(to);
 	const sendingUser = Users.get(senderID);
 	const receivingUser = Users.get(receiverID);
-	const fromIdentity = sendingUser?.connected ? sendingUser.getIdentity() : ` ${senderID}`;
-	const toIdentity = receivingUser?.connected ? receivingUser.getIdentity() : ` ${receiverID}`;
+	const fromIdentity = sendingUser ? sendingUser.getIdentity() : ` ${senderID}`;
+	const toIdentity = receivingUser ? receivingUser.getIdentity() : ` ${receiverID}`;
 
 	if (from === '~') {
 		return receivingUser?.send(`|pm|~|${toIdentity}|${message}`);
@@ -206,14 +206,13 @@ export class FriendsDatabase {
 		}
 		sendPM(
 			`/nonotify You sent a friend request to ${receiver?.connected ? receiver.name : receiverID}!`,
-			user.name,
-			receiverID
+			user.name
 		);
 		sendPM(
 			`/uhtml undo-${receiverID},<button class="button" name="send" value="/friends undorequest ${Utils.escapeHTML(receiverID)}">` +
-			`<i class="fa fa-undo"></i> Undo</button>`, user.name, receiverID
+			`<i class="fa fa-undo"></i> Undo</button>`, user.name
 		);
-		sendPM(disclaimer, user.id, receiverID);
+		sendPM(disclaimer, user.id);
 		return result;
 	}
 	async removeRequest(receiverID: ID, senderID: ID) {
@@ -438,7 +437,7 @@ if (!PM.isParentProcess) {
 	global.Monitor = {
 		crashlog(error: Error, source = 'A friends database process', details: AnyObject | null = null) {
 			const repr = JSON.stringify([error.name, error.message, source, details]);
-			process.send!(`THROW\n@!!@${repr}\n${error.stack ?? error}`);
+			process.send!(`THROW\n@!!@${repr}\n${error.stack}`);
 		},
 		slow(message: string) {
 			process.send!(`CALLBACK\nSLOW\n${message}`);
@@ -449,7 +448,7 @@ if (!PM.isParentProcess) {
 			Monitor.crashlog(err, 'A friends child process');
 		}
 	});
-	// oxlint-disable-next-line no-eval
+	// eslint-disable-next-line no-eval
 	PM.startRepl(cmd => eval(cmd));
 }
 

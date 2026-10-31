@@ -1565,8 +1565,8 @@ export class RandomBDSPTeams {
 		const type = this.forceMonotype || this.sample(typePool);
 
 		// PotD stuff
-		const potdName = (ruleTable.has('potd') && global.Config?.potd) || null;
-		const potd = potdName ? this.dex.species.get(potdName) : null;
+		const usePotD = global.Config && Config.potd && ruleTable.has('potd');
+		const potd = usePotD ? this.dex.species.get(Config.potd) : null;
 
 		const baseFormes: { [k: string]: number } = {};
 
@@ -1660,9 +1660,7 @@ export class RandomBDSPTeams {
 			// The Pokemon of the Day
 			if (potd?.exists && (pokemon.length === 1 || this.maxTeamSize === 1)) species = potd;
 
-			const set = this.randomSet(species, teamDetails,
-				pokemon.length === 0 && !ruleTable.has('pickedteamsize') && !ruleTable.has('teampreview')
-			);
+			const set = this.randomSet(species, teamDetails, pokemon.length === 0);
 
 			// Okay, the set passes, add it to our team
 			pokemon.push(set);

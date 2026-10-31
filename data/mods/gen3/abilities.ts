@@ -1,20 +1,4 @@
 export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTable = {
-	airlock: {
-		inherit: true,
-		onSwitchInPriority: 4,
-		onAfterEntryHazard(pokemon) {
-			((this.effect as any).onStart as (p: Pokemon) => void).call(this, pokemon);
-		},
-		onSwitchIn: undefined, // no inherit
-	},
-	cloudnine: {
-		inherit: true,
-		onSwitchInPriority: 4,
-		onAfterEntryHazard(pokemon) {
-			((this.effect as any).onStart as (p: Pokemon) => void).call(this, pokemon);
-		},
-		onSwitchIn: undefined, // no inherit
-	},
 	cutecharm: {
 		inherit: true,
 		onDamagingHit(damage, target, source, move) {
@@ -24,22 +8,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 				}
 			}
 		},
-	},
-	drizzle: {
-		inherit: true,
-		onSwitchInPriority: 3,
-		onAfterEntryHazard(pokemon) {
-			((this.effect as any).onStart as (p: Pokemon) => void).call(this, pokemon);
-		},
-		onSwitchIn: undefined, // no inherit
-	},
-	drought: {
-		inherit: true,
-		onSwitchInPriority: 3,
-		onAfterEntryHazard(pokemon) {
-			((this.effect as any).onStart as (p: Pokemon) => void).call(this, pokemon);
-		},
-		onSwitchIn: undefined, // no inherit
 	},
 	effectspore: {
 		inherit: true,
@@ -79,11 +47,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	},
 	forecast: {
 		inherit: true,
-		onSwitchInPriority: 3,
-		onAfterEntryHazard(pokemon) {
-			((this.effect as any).onStart as (p: Pokemon) => void).call(this, pokemon);
-		},
-		onSwitchIn: undefined, // no inherit
 		flags: {},
 	},
 	hustle: {
@@ -97,7 +60,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	},
 	intimidate: {
 		inherit: true,
-		onSwitchInPriority: 2, // before Trace
 		onStart(pokemon) {
 			let activated = false;
 			for (const target of pokemon.adjacentFoes()) {
@@ -205,14 +167,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 			}
 		},
 	},
-	sandstream: {
-		inherit: true,
-		onSwitchInPriority: 3,
-		onAfterEntryHazard(pokemon) {
-			((this.effect as any).onStart as (p: Pokemon) => void).call(this, pokemon);
-		},
-		onSwitchIn: undefined, // no inherit
-	},
 	shadowtag: {
 		inherit: true,
 		onFoeTrapPokemon(pokemon) {
@@ -232,7 +186,6 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 	trace: {
 		inherit: true,
 		onUpdate: undefined, // no inherit
-		onSwitchInPriority: 1, // after Intimidate, before items
 		onStart(pokemon) {
 			const target = pokemon.side.randomFoe();
 			if (!target || target.fainted) return;
@@ -246,21 +199,16 @@ export const Abilities: import('../../../sim/dex-abilities').ModdedAbilityDataTa
 		onStart: undefined, // no inherit
 		onSwitchIn(pokemon) {
 			pokemon.truantTurn = this.turn !== 0;
-			// it is unnecessary to keep a volatile, but it helps with cross-gen implementation
+		},
+		onBeforeMove(pokemon) {
 			if (pokemon.truantTurn) {
-				pokemon.addVolatile('truant');
-			} else {
-				pokemon.removeVolatile('truant');
+				this.add('cant', pokemon, 'ability: Truant');
+				return false;
 			}
 		},
 		onResidualOrder: 27,
 		onResidual(pokemon) {
 			pokemon.truantTurn = !pokemon.truantTurn;
-			if (pokemon.truantTurn) {
-				pokemon.addVolatile('truant');
-			} else {
-				pokemon.removeVolatile('truant');
-			}
 		},
 	},
 	voltabsorb: {

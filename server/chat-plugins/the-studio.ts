@@ -326,7 +326,7 @@ class RecommendationsInterface {
 		buf += `<div style="color:#000;background:linear-gradient(rgba(210,210,210),rgba(225,225,225))">`;
 		buf += `<table style="margin:auto;background:rgba(255,255,255,0.25);padding:3px;"><tbody><tr>`;
 		if (!rec.videoInfo) {
-			// oxlint-disable-next-line ps/require-atomic-updates
+			// eslint-disable-next-line require-atomic-updates
 			rec.videoInfo = await YouTube.getVideoData(YouTube.getId(rec.url));
 			saveRecommendations();
 		}
@@ -472,9 +472,9 @@ export const commands: Chat.ChatCommands = {
 		this.checkChat();
 		if (!user.autoconfirmed) throw new Chat.ErrorMessage(`You cannot use this command while not autoconfirmed.`);
 		this.runBroadcast(true);
-		const targetUser = this.splitOne(this.splitUser(target).targetUsername || (user.named ? user.name : ''))[0];
-		const username = LastFM.getAccountName(targetUser);
-		this.sendReplyBox(await LastFM.getScrobbleData(username, targetUser));
+		const targetUsername = this.splitUser(target).targetUsername || (user.named ? user.name : '');
+		const username = LastFM.getAccountName(targetUsername);
+		this.sendReplyBox(await LastFM.getScrobbleData(username, targetUsername));
 	},
 	lastfmhelp: [
 		`/lastfm [username] - Displays the last scrobbled song for the person using the command or for [username] if provided.`,
@@ -485,12 +485,10 @@ export const commands: Chat.ChatCommands = {
 		if (!target) return this.parse('/help track');
 		this.checkChat();
 		if (!user.autoconfirmed) throw new Chat.ErrorMessage(`You cannot use this command while not autoconfirmed.`);
-		const [track, optionals] = this.splitOne(target);
+		const [track, artist] = this.splitOne(target);
 		if (!track) return this.parse('/help track');
-		const [artist, comment] = this.splitOne(optionals);
 		this.runBroadcast(true);
-		const trackData = await LastFM.tryGetTrackData(track, artist || undefined);
-		this.sendReplyBox(comment ? `${trackData}<br />(${Utils.escapeHTML(comment)})` : trackData);
+		this.sendReplyBox(await LastFM.tryGetTrackData(track, artist || undefined));
 	},
 	trackhelp: [
 		`/track [song name], [artist] - Displays the most relevant search result to the song name (and artist if specified) provided.`,

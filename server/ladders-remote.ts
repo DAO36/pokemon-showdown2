@@ -12,16 +12,10 @@
  * @license MIT
  */
 import { Utils } from '../lib';
-import type { LadderRating, LadderUpdate } from './ladders';
-
-function parseRating(rating: unknown): LadderRating | null {
-	if (!rating || typeof rating !== 'object' || !('elo' in rating) || typeof rating.elo !== 'number') return null;
-	return rating as LadderRating;
-}
 
 export class LadderStore {
 	formatid: string;
-	static readonly formatsListPrefix: string = '';
+	static readonly formatsListPrefix = '';
 
 	constructor(formatid: string) {
 		this.formatid = formatid;
@@ -33,7 +27,7 @@ export class LadderStore {
 	 * client.
 	 */
 	// This requires to be `async` because it must conform with the `LadderStore` interface
-	// oxlint-disable-next-line typescript/require-await
+	// eslint-disable-next-line @typescript-eslint/require-await
 	async getTop(prefix?: string): Promise<[string, string] | null> {
 		return null;
 	}
@@ -57,7 +51,7 @@ export class LadderStore {
 		}
 		if (isNaN(mmr)) return 1000;
 
-		if (user?.id === userid) {
+		if (user && user.id === userid) {
 			user.mmrCache[formatid] = mmr;
 		}
 		return mmr;
@@ -67,7 +61,9 @@ export class LadderStore {
 	 * Update the Elo rating for two players after a battle, and display
 	 * the results in the passed room.
 	 */
-	async updateRating(p1name: string, p2name: string, p1score: number, room: AnyObject): Promise<LadderUpdate> {
+	async updateRating(p1name: string, p2name: string, p1score: number, room: AnyObject): Promise<[
+		number, AnyObject | undefined | null, AnyObject | undefined | null,
+	]> {
 		if (Ladders.disabled) {
 			room.addRaw(`Ratings not updated. The ladders are currently disabled.`).update();
 			return [p1score, null, null];
@@ -138,14 +134,14 @@ export class LadderStore {
 			return [p1score, null, null];
 		}
 
-		return [p1score, parseRating(data?.p1rating), parseRating(data?.p2rating)];
+		return [p1score, data?.p1rating, data?.p2rating];
 	}
 
 	/**
 	 * Returns a Promise for an array of strings of <tr>s for ladder ratings of the user
 	 */
 	// This requires to be `async` because it must conform with the `LadderStore` interface
-	// oxlint-disable-next-line typescript/require-await
+	// eslint-disable-next-line @typescript-eslint/require-await
 	static async visualizeAll(username: string) {
 		return [`<tr><td><strong>Please use the official client at play.pokemonshowdown.com</strong></td></tr>`];
 	}

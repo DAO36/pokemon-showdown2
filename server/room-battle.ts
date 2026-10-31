@@ -20,7 +20,6 @@ import type { Tournament } from './tournaments/index';
 import type { RoomSettings } from './rooms';
 import type { BestOfGame } from './room-battle-bestof';
 import type { GameTimerSettings } from '../sim/dex-formats';
-import type { LadderRating } from './ladders';
 
 type ChannelIndex = 0 | 1 | 2 | 3 | 4;
 export type PlayerIndex = 1 | 2 | 3 | 4;
@@ -655,7 +654,6 @@ export class RoomBattle extends RoomGame<RoomBattlePlayer> {
 			return;
 		}
 		request.isWait = false;
-		request.choice = '';
 
 		void this.stream.write(`>${player.slot} undo`);
 	}
@@ -665,30 +663,24 @@ export class RoomBattle extends RoomGame<RoomBattlePlayer> {
 			return false;
 		}
 
-		const validSlots = this.players.filter(player => !player.id && !player.eliminated).map(player => player.slot);
+		const validSlots = this.players.filter(player => !player.id).map(player => player.slot);
 
 		if (slot && !validSlots.includes(slot)) {
-			if (this[slot]?.eliminated) {
-				user.popup(`The player in slot ${slot} has already been eliminated.`);
-			} else if (this.players.some(player => player.slot === slot)) {
-				user.popup(`This battle already has a user in slot ${slot}.`);
-			} else {
-				user.popup(`Slot "${slot}" doesn't exist in this battle.`);
-			}
+			user.popup(`This battle already has a user in slot ${slot}.`);
 			return false;
 		}
 
 		if (!validSlots.length) {
-			user.popup(`This battle has no available player slots.`);
+			user.popup(`This battle already has ${this.playerCap} players.`);
 			return false;
 		}
 
-		slot ||= validSlots.find(validSlot => this[validSlot].invite === user.id);
+		slot ??= this.players.find(player => player.invite === user.id)?.slot;
 		if (!slot && validSlots.length > 1) {
 			user.popup(`Which slot would you like to join into? Use something like \`/joingame ${validSlots[0]}\``);
 			return false;
 		}
-		slot ||= validSlots[0];
+		slot ??= validSlots[0];
 
 		if (this[slot].invite === user.id) {
 			this.room.auth.set(user.id, Users.PLAYER_SYMBOL);
@@ -702,7 +694,7 @@ export class RoomBattle extends RoomGame<RoomBattlePlayer> {
 			// all players have joined, start the battle
 			// onCreateBattleRoom crashes if some users are unavailable at start of battle
 			// what do we do??? no clue but I guess just exclude them from the array for now
-			const users = this.players.map(player => player.getUser()).filter(Boolean);
+			const users = this.players.map(player => player.getUser()).filter(Boolean) as User[];
 			Rooms.global.onCreateBattleRoom(users, this.room, { rated: this.rated });
 			this.started = true;
 			this.room.add(`|uhtmlchange|invites|`);
@@ -864,7 +856,7 @@ export class RoomBattle extends RoomGame<RoomBattlePlayer> {
 		// If the room's replay was hidden, don't let users join after the game is over
 		if (this.room.hideReplay) {
 			this.room.settings.modjoin = '%';
-			this.room.setPrivate('hidden', this.password);
+			this.room.setPrivate('hidden');
 		}
 		this.room.update();
 
@@ -889,20 +881,15 @@ export class RoomBattle extends RoomGame<RoomBattlePlayer> {
 		}
 		const p1 = this.p1.name;
 		const p2 = this.p2.name;
-		/** stored here because players can rename after the battle, while awaiting updateRating */
-		const playerIsBot = this.players.map(player => player.getUser()?.isUserBot);
-		const [score, ...ratings] = await Ladders(this.ladder).updateRating(
+		const [score, p1rating, p2rating] = await Ladders(this.ladder).updateRating(
 			p1, p2, p1score, this.room
 		);
-		for (const [i, rating] of ratings.entries()) {
-			if (rating) rating.isBot = playerIsBot[i];
-		}
-		void this.logBattle(score, ...ratings);
-		Chat.runHandlers('onBattleRanked', this, winnerid, ratings, [p1, p2].map(toID));
+		void this.logBattle(score, p1rating, p2rating);
+		Chat.runHandlers('onBattleRanked', this, winnerid, [p1rating, p2rating], [p1, p2].map(toID));
 	}
 	async logBattle(
-		p1score: number, p1rating: LadderRating | null = null, p2rating: LadderRating | null = null,
-		p3rating: LadderRating | null = null, p4rating: LadderRating | null = null
+		p1score: number, p1rating: AnyObject | null = null, p2rating: AnyObject | null = null,
+		p3rating: AnyObject | null = null, p4rating: AnyObject | null = null
 	) {
 		if (Dex.formats.get(this.format, true).noLog) return;
 		const logData = this.logData;
@@ -910,7 +897,7 @@ export class RoomBattle extends RoomGame<RoomBattlePlayer> {
 		this.logData = null; // deallocate to save space
 		logData.log = this.room.getLog(-1).split('\n'); // replay log (exact damage)
 
-		// clean up
+		// delete some redundant data
 		for (const rating of [p1rating, p2rating, p3rating, p4rating]) {
 			if (rating) {
 				delete rating.formatid;
@@ -921,12 +908,12 @@ export class RoomBattle extends RoomGame<RoomBattlePlayer> {
 		}
 
 		logData.p1rating = p1rating;
+		if (this.replaySaved) logData.replaySaved = this.replaySaved;
 		logData.p2rating = p2rating;
 		if (this.playerCap > 2) {
 			logData.p3rating = p3rating;
 			logData.p4rating = p4rating;
 		}
-		if (this.replaySaved) logData.replaySaved = this.replaySaved;
 		logData.endType = this.endType;
 		if (!p1rating) logData.ladderError = true;
 		const date = new Date();
@@ -1052,7 +1039,7 @@ export class RoomBattle extends RoomGame<RoomBattlePlayer> {
 		if (this.ended || !this.started || player.eliminated) return false;
 
 		player.eliminated = true;
-		this.room.add(`|-message|${player.name}${message || ' was made to forfeit.'}`);
+		this.room.add(`|-message|${player.name}${message || ' forfeited.'}`);
 		this.endType = 'forfeit';
 		if (this.playerCap > 2) {
 			player.sendRoom(`|request|null`);
@@ -1390,12 +1377,12 @@ if (!PM.isParentProcess) {
 	global.Monitor = {
 		crashlog(error: Error, source = 'A simulator process', details: AnyObject | null = null) {
 			const repr = JSON.stringify([error.name, error.message, source, details]);
-			process.send!(`THROW\n@!!@${repr}\n${error.stack ?? error}`);
+			process.send!(`THROW\n@!!@${repr}\n${error.stack}`);
 		},
 		slow(text: string) {
 			process.send!(`CALLBACK\nSLOW\n${text}`);
 		},
-	} as typeof Monitor;
+	};
 	global.__version = { head: '' };
 	try {
 		const head = execSync('git rev-parse HEAD', {
@@ -1419,6 +1406,6 @@ if (!PM.isParentProcess) {
 		});
 	}
 
-	// oxlint-disable-next-line no-eval
+	// eslint-disable-next-line no-eval
 	PM.startRepl(cmd => eval(cmd));
 }

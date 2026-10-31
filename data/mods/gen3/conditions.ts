@@ -3,7 +3,7 @@ export const Conditions: import('../../../sim/dex-conditions').ModdedConditionDa
 		name: 'slp',
 		effectType: 'Status',
 		onStart(target, source, sourceEffect) {
-			if (sourceEffect?.effectType === 'Move') {
+			if (sourceEffect && sourceEffect.effectType === 'Move') {
 				this.add('-status', target, 'slp', `[from] move: ${sourceEffect.name}`);
 			} else {
 				this.add('-status', target, 'slp');
@@ -17,7 +17,7 @@ export const Conditions: import('../../../sim/dex-conditions').ModdedConditionDa
 				this.add('-end', target, 'Nightmare', '[silent]');
 			}
 		},
-		onSwitchOut(target) {
+		onSwitchIn(target) {
 			this.effectState.time += this.effectState.skippedTime;
 			this.effectState.skippedTime = 0;
 		},

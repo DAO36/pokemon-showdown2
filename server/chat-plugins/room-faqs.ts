@@ -50,7 +50,7 @@ export function visualizeFaq(faq: RoomFAQ) {
 
 export function getAlias(roomid: RoomID, key: string) {
 	if (!roomFaqs[roomid]) return false;
-	const value = roomFaqs[roomid][toID(key)];
+	const value = roomFaqs[roomid][key];
 	if (value?.alias) return value.source;
 	return false;
 }
@@ -87,7 +87,8 @@ export const commands: Chat.ChatCommands = {
 		if (!useHTML) {
 			text = text.replace(/^>/, '&gt;');
 		} else {
-			text = this.checkHTML(Chat.collapseLineBreaksHTML(text));
+			text = text.replace(/\n/ig, '<br />');
+			text = this.checkHTML(text);
 		}
 
 		if (!roomFaqs[room.roomid]) roomFaqs[room.roomid] = {};
@@ -144,9 +145,8 @@ export const commands: Chat.ChatCommands = {
 		if (!(roomFaqs[room.roomid] && topic in roomFaqs[room.roomid])) {
 			throw new Chat.ErrorMessage(`The topic ${topic} was not found in this room's faq list.`);
 		}
-		const topic2 = getAlias(room.roomid, topic);
-		if (topic2) {
-			throw new Chat.ErrorMessage(`You cannot make an alias of an alias. Use /addalias ${alias}, ${topic2} instead.`);
+		if (getAlias(room.roomid, topic)) {
+			throw new Chat.ErrorMessage(`You cannot make an alias of an alias. Use /addalias ${alias}, ${getAlias(room.roomid, topic)} instead.`);
 		}
 		roomFaqs[room.roomid][alias] = {
 			alias: true,
@@ -181,7 +181,7 @@ export const commands: Chat.ChatCommands = {
 					'lostpassword', 'password', 'lostpass',
 				];
 				if (!validTopics.includes(normalized)) {
-					return this.errorReply(`'${target}' is an invalid topic. Use /${cmd} to see all available topics.`);
+					return this.errorReply(`'${target}' is an invalid topic.`);
 				}
 				if (!this.runBroadcast()) return;
 				return faqCommand.call(this, target, room, user, connection, 'faq', '!');
